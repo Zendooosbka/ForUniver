@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.android.gms.vision.*;
+
+import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
@@ -33,7 +34,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //mImageView.setImageBitmap(imageBitmap);
+            ImageView Image = (ImageView) findViewById(R.id.imageView);
+            Frame frame = new Frame.Builder().setBitmap(imageBitmap).build();
+            SparseArray<Barcode> barcodes = Detector.detect(frame);
+            Barcode thisCode = barcodes.valueAt(0);
+            txtView.setText(thisCode.rawValue);
         }
     }
 
